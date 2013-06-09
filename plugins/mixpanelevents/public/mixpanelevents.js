@@ -29,7 +29,7 @@ function mixpanelEvents(el) {
     var $label = $widget.find('.big-label');
     var height = $label.height();
     var containerHeight = $label.parent().innerHeight();
-    var offset = containerHeight/2 - height/2;
+    var offset = containerHeight/2 - height/2 - 10;
     $label.css('top', offset + 'px');
   }
 
