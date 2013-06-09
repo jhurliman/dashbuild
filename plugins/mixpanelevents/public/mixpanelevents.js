@@ -1,6 +1,6 @@
 
 function mixpanelEvents(el) {
-  var REFRESH_MS = 1000 * 60 * 5; // 1 minute
+  var REFRESH_MS = 1000 * 60 * 1; // 1 minute
   var API_KEY = 'xxx';
   var API_SECRET = 'xxx';
   var EVENTS_URL = 'http://mixpanel.com/api/2.0/events/';
