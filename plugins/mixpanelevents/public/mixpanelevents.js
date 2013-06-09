@@ -18,8 +18,19 @@ function mixpanelEvents(el) {
     update();
   }
 
-  function resizeHandler(e) {
-    $widget.bigtext();
+  function resizeHandler() {
+    $widget.bigtext({
+      maxfontsize: 190,
+      childSelector: '.big-label',
+      resize: false
+    });
+
+    // HACK: Manual vertical centering
+    var $label = $widget.find('.big-label');
+    var height = $label.height();
+    var containerHeight = $label.parent().innerHeight();
+    var offset = containerHeight/2 - height/2;
+    $label.css('top', offset + 'px');
   }
 
   function unloadHandler() {
@@ -43,7 +54,7 @@ function mixpanelEvents(el) {
       var uniques = $dashutils.formatNumber(res.data.values.page_view[curMonth]);
 
       $widget.html('<div class="big-label">' + uniques + '</div>');
-      $widget.bigtext();
+      resizeHandler();
     });
   }
 

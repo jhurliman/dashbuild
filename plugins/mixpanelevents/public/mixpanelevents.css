@@ -11,16 +11,12 @@
 }
 
 .mixpanelevents .widget-content {
-  display: table;
-  width: 100%;
-  height: 100%;
-  margin-top: -20px;
   padding: 0 10px 0 10px;
 }
 
 .mixpanelevents .big-label {
-  display: table-cell;
-  vertical-align: middle;
+  position: relative;
   color: #333;
   line-height: 100%;
+  text-align: center;
 }

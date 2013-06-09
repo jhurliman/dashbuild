@@ -37,6 +37,10 @@ window.$dash = (function() {
     });
     $('#add-widget .btn-primary').click(addWidgetHandler);
 
+    $('.dashboard').on('click', '.widget-settings-btn', settingsClickHandler);
+    $('.dashboard').on('click', '.edit-overlay .close', function() { $(this).parent().hide(); });
+    $('.dashboard').on('click', '.edit-overlay .arrow', resizeClickHandler);
+
     // Load the default dashboard
     ctx.loadDashboard('default');
   };
@@ -221,12 +225,20 @@ window.$dash = (function() {
 
     var html = '<li class="widget ' + type + '" data-col="' + x +
       '" data-row="' + y + '" data-sizex="' + cols + '" data-sizey="' +
-      rows + '">' +
+      rows + '" data-widgetid="' + widgetID + '">' +
         '<div class="widget-header">' +
           '<div class="widget-title">' + title + '</div>' +
           '<i class="widget-settings-btn icon-cog"></i>' +
         '</div>' +
         '<div class="widget-content"></div>' +
+        '<div class="edit-overlay">' +
+          '<button type="button" class="close">&times;</button>' +
+          '<button type="button" class="btn btn-danger delete">Delete</button>' +
+          '<button type="button" class="arrow up" data-dir="up"><i class="icon-arrow-up"></i></button>' +
+          '<button type="button" class="arrow left" data-dir="left"><i class="icon-arrow-left"></i></button>' +
+          '<button type="button" class="arrow right" data-dir="right"><i class="icon-arrow-right"></i></button>' +
+          '<button type="button" class="arrow down" data-dir="down"><i class="icon-arrow-down"></i></button>' +
+        '</div>' +
       '</li>';
 
     ctx.dashboard.loaded.widgets[widgetID] = {
@@ -313,8 +325,7 @@ window.$dash = (function() {
             y: y,
             cols: w,
             rows: h,
-            gridCols: cols,
-            prevGridCols: ctx.prevCols
+            gridCols: cols
           });
         }
       }
@@ -353,6 +364,70 @@ window.$dash = (function() {
         pluginLoadedHandler(name, loadedPlugin.obj);
       }
     });
+  }
+
+  function settingsClickHandler(e) {
+    var $widget = $(this).parents('.widget');
+    var widgetID = $widget.attr('data-widgetid');
+    if (!widgetID)
+      return;
+
+    console.log('Enabling edit mode for widget ' + widgetID);
+    $widget.find('.edit-overlay').show();
+  }
+
+  function resizeClickHandler(e) {
+    var $widget = $(this).parents('.widget');
+    var widgetID = $widget.attr('data-widgetid');
+    if (!widgetID)
+      return;
+
+    var widget = ctx.dashboard.loaded.widgets[widgetID];
+    if (!widget)
+      return;
+
+    var cols = parseInt($widget.attr('data-sizex'), 10);
+    var rows = parseInt($widget.attr('data-sizey'), 10);
+    var x = parseInt($widget.attr('data-col'), 10);
+    var y = parseInt($widget.attr('data-row'), 10);
+    var gridCols = ctx.getColumns();
+    var dir = $(this).attr('data-dir');
+
+    switch (dir) {
+      case 'up':
+        if (rows < 2) return;
+        rows--;
+        break;
+      case 'left':
+        if (cols < 2) return;
+        cols--;
+        break;
+      case 'down':
+        rows++;
+        break;
+      case 'right':
+        if (cols >= gridCols) return;
+        cols++;
+        break;
+    }
+
+    console.log('Resizing widget ' + widgetID + ' (' + cols + ', ' + rows + ')');
+
+    $widget.attr('data-sizex', cols);
+    $widget.attr('data-sizey', rows);
+    ctx.grid.resize_widget($widget, cols, rows);
+    ctx.grid.init();
+
+    // Wait for the resize animation to finish
+    setTimeout(function() {
+      widget.instance.trigger('resize', {
+        x: x,
+        y: y,
+        cols: cols,
+        rows: rows,
+        gridCols: gridCols
+      });
+    }, 500);
   }
 
   return this;

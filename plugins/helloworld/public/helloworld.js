@@ -6,8 +6,7 @@ function helloWorld(el) {
   function init() {
     console.log('Hello world!');
 
-    var $img = $('<img src="/plugins/helloworld/img/helloworld.png">')
-      .css('margin-top', '25px');
+    var $img = $('<img src="/plugins/helloworld/img/helloworld.png">');
     $widget.html($img);
 
     pluginCtx.on('resize', resizeHandler);
