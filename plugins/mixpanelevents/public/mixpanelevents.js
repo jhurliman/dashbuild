@@ -7,18 +7,25 @@ function mixpanelEvents(el) {
 
   var $widget = $(el);
   var pluginCtx = this;
+  var updateTimer;
 
   function init() {
     $widget.text('Loading...');
 
     pluginCtx.on('resize', resizeHandler);
-    setInterval(update, REFRESH_MS);
+    pluginCtx.on('unload', unloadHandler);
+    updateTimer = setInterval(update, REFRESH_MS);
     update();
   }
 
   function resizeHandler(e) {
     // We don't have any special drawing requirements so no need to do anything
     console.log(JSON.stringify(e));
+  }
+
+  function unloadHandler() {
+    // Destroy the update timer
+    clearInterval(updateTimer);
   }
 
   function update() {
