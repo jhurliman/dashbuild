@@ -1,0 +1,90 @@
+
+* {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  padding-top: 60px;
+  background-color: #f1f1f1;
+}
+
+body > .container {
+  overflow: hidden;
+  border: 1px dotted red;
+}
+
+.widget {
+  border: 1px solid black;
+}
+
+.gridster {
+  width: 100%;
+  margin: 0 auto;
+
+  opacity: .8;
+
+  -webkit-transition: opacity .6s;
+  -moz-transition: opacity .6s;
+  -o-transition: opacity .6s;
+  -ms-transition: opacity .6s;
+  transition: opacity .6s;
+}
+
+.gridster > ul {
+  list-style: none;
+}
+
+.gridster .gs_w {
+  background: #FFF;
+  cursor: pointer;
+}
+
+.gridster .player {
+  -moz-box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+  -webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+  box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
+}
+
+
+.gridster .gs_w.try {
+  background-image: url(../img/sprite.png);
+  background-repeat: no-repeat;
+  background-position: 37px -169px;
+
+}
+
+.gridster .preview-holder {
+  border: none;
+  border-radius: 0;
+  background: #111;
+  background: rgba(0,0,0,.2);
+}
+
+.front-no-js-warn {
+  position: absolute;
+  top: 50px;
+  bottom: 50px;
+  left: 50%;
+  width: 798px;
+  padding: 15px 20px;
+  margin: 0 0 0 -418px;
+  z-index: 2;
+  color: #ddd;
+  line-height: 1.5;
+  background-color: #111;
+  background-color: rgba(20,20,20,.9);
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+.front-no-js-warn h3 {
+  color: #FEC632;
+  font-weight: bold;
+}
+
+.front-no-js-warn a {
+  color: #75C6F7;
+}

@@ -1,0 +1,16 @@
+
+.mixpanelevents {
+  font-family: 'Helvetica neue', Helvetica, Arial, sans-serif;
+
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15), inset 0 1px 0 #ffffff;
+  background-color: #f1f1f1;
+}
+
+.mixpanelevents .big-label {
+  color: #333;
+  line-height: 100%;
+}

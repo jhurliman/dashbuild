@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html ng-app>
+  <head>
+    <title>DashBuild</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/css/jquery.gridster.min.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
+
+    <script src="/js/lib/modernizr.min.js"></script>
+    <script src="/js/lib/angular.min.js"></script>
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/img/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/img/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/img/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/img/apple-touch-icon-57-precomposed.png">
+    <link rel="shortcut icon" href="/img/favicon.png">
+  </head>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">DashBuild</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="dropdown" id="dashboard-menu">
+                <a href="#dashboard-menu" class="dropdown-toggle" data-toggle="dropdown">Dashboards</a>
+                <ul class="dropdown-menu" role="menu">
+                  <li>
+                    <a href="#"><i class="icon-plus"></i> New Dashboard</a>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <a href="#add-widget" data-toggle="modal"><i class="icon-plus"></i> Add Widget</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div class="gridster">
+        <ul>
+          <!--<li class="widget" data-row="1" data-col="1" data-sizex="2" data-sizey="1"></li>
+          <li class="widget" data-row="3" data-col="1" data-sizex="1" data-sizey="1"></li>
+
+          <li class="widget" data-row="3" data-col="2" data-sizex="2" data-sizey="1"></li>
+          <li class="widget" data-row="1" data-col="3" data-sizex="2" data-sizey="2"></li>
+
+          <li class="widget" data-row="1" data-col="5" data-sizex="1" data-sizey="1"></li>
+          <li class="widget" data-row="2" data-col="1" data-sizex="2" data-sizey="1"></li>
+          <li class="widget" data-row="3" data-col="4" data-sizex="1" data-sizey="1"></li>
+
+          <li class="widget" data-row="1" data-col="6" data-sizex="1" data-sizey="1"></li>
+          <li class="widget" data-row="3" data-col="5" data-sizex="1" data-sizey="1"></li>
+
+          <li class="widget" data-row="2" data-col="5" data-sizex="1" data-sizey="1"></li>
+          <li class="widget" data-row="2" data-col="6" data-sizex="1" data-sizey="2"></li>-->
+        </ul>
+      </div>
+
+    </div>
+
+    <div id="add-widget" class="modal hide fade">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Add a Widget</h3>
+      </div>
+      <div class="modal-body">
+        <select class="widget-list"></select>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <a href="#" class="btn btn-primary disabled" data-loading-text="Adding..." autocomplete="off">Add Widget</a>
+      </div>
+    </div>
+
+    <noscript>
+      <div class="front-no-js-warn">
+        <h3>DashBuild requires JavaScript</h3>
+        <p>Enable JavaScript in your browser's preferences then refresh this page</p>
+      </div>
+    </noscript>
+
+    <script src="/js/lib/jquery-1.10.1.min.js"></script>
+    <script src="/js/lib/bootstrap.min.js"></script>
+    <script src="/js/lib/jquery.bigtext.js"></script>
+    <script src="/js/lib/jquery.gridster.js"></script>
+    <script src="/js/lib/jquery.md5.js"></script>
+    <script src="/js/lib/jquery.debouncedresize.js"></script>
+    <script src="/js/lib/async.js"></script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>

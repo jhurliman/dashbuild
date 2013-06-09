@@ -1,0 +1,9 @@
+{
+  "debug": true,
+  "web_port": 4334,
+  "run_as_user": "",
+  "log_path": "dashbuild.log",
+  "log_level": "info",
+  "using_proxy": false,
+  "signing_secret": "lCUnQAQh6kXmMNWCMbLWxt3GtXuMkEfW"
+}
