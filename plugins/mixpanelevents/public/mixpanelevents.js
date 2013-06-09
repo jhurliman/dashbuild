@@ -19,8 +19,7 @@ function mixpanelEvents(el) {
   }
 
   function resizeHandler(e) {
-    // We don't have any special drawing requirements so no need to do anything
-    console.log(JSON.stringify(e));
+    $widget.bigtext();
   }
 
   function unloadHandler() {

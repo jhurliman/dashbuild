@@ -70,21 +70,8 @@ window.$dash = (function() {
             widgets: {}
           };
 
-          for (var widgetID in layout.widgets) {
-            var widget = layout.widgets[widgetID];
-
-            console.log('Loaded widget ' + widgetID + ' (x=' + widget.x + ', y=' +
-              widget.y + ', w=' + widget.cols + ', h=' + widget.rows + ')');
-            dashboard.loaded.widgets[widgetID] = {
-              type: widget.type,
-              el: ctx.grid.add_widget(
-                '<li class="widget ' + widget.type + '" data-row="' + widget.y +
-                '" data-col="' + widget.x + '" data-sizex="' + widget.cols +
-                '" data-sizey="' + widget.rows + '"></li>',
-                widget.cols, widget.rows, widget.x, widget.y),
-              instance: null
-            };
-          }
+          for (var widgetID in layout.widgets)
+            addWidget(layout.widgets[widgetID]);
         });
       }
     );
@@ -216,6 +203,39 @@ window.$dash = (function() {
     return { columns: cols, widgets: {} };
   }
 
+  function addWidget(options) {
+    if (!options.type)
+      throw new Error('Missing required widget type');
+
+    var widgetID = options.widgetID || createUUID();
+    var x = options.x || 1;
+    var y = options.y || 1;
+    var rows = options.rows || 1;
+    var cols = options.cols || 1;
+    var type = options.type;
+    var title = options.title || options.type;
+    var instance = options.instance;
+
+    console.log('Adding ' + type + ' widget ' + widgetID + ' (x=' + x +
+      ', y=' + y + ', w=' + cols + ', h=' + rows + ')');
+
+    var html = '<li class="widget ' + type + '" data-col="' + x +
+      '" data-row="' + y + '" data-sizex="' + cols + '" data-sizey="' +
+      rows + '">' +
+        '<div class="widget-header">' +
+          '<div class="widget-title">' + title + '</div>' +
+          '<i class="widget-settings-btn icon-cog"></i>' +
+        '</div>' +
+        '<div class="widget-content"></div>' +
+      '</li>';
+
+    ctx.dashboard.loaded.widgets[widgetID] = {
+      type: type,
+      el: ctx.grid.add_widget(html, cols, rows, x, y),
+      instance: instance
+    };
+  }
+
   function createUUID() {
     return 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'.replace(/x/g, function(c) {
       return (Math.random()*16|0).toString(16);
@@ -252,7 +272,7 @@ window.$dash = (function() {
         continue;
 
       console.log('Creating instance of ' + name + ' - ' + widgetID);
-      widget.instance = new pluginObj(widget.el);
+      widget.instance = new pluginObj(widget.el.find('.widget-content'));
     }
   }
 
@@ -324,20 +344,7 @@ window.$dash = (function() {
       $('#add-widget').modal('hide');
       if (err) return ctx.showError(err);
 
-      var widgetID = createUUID();
-      var x = 1, y = 1;
-      var rows = 1, cols = 1;
-
-      console.log('Adding widget ' + widgetID + ' (x=' + x + ', y=' +
-        y + ', w=' + cols + ', h=' + rows + ')');
-      ctx.dashboard.loaded.widgets[widgetID] = {
-        type: name,
-        el: ctx.grid.add_widget(
-          '<li class="widget ' + name + '" data-row="' + y + '" data-col="' + x +
-          '" data-sizex="' + cols + '" data-sizey="' + rows + '"></li>',
-          cols, rows, x, y),
-        instance: null
-      };
+      addWidget({ type: name });
 
       // Check if the plugin JS is already loaded
       var loadedPlugin = ctx.loadedPlugins[name];
