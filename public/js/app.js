@@ -12,8 +12,10 @@ window.$dash = (function() {
   this.grid = null;
   this.dashboard = null;
   this.prevCols = null;
-  this.availablePlugins = {};
+  this.availableWidgets = {};
+  this.availableSources = {};
   this.loadedPlugins = {};
+  this.activeDataSourceHookup = null;
 
   // Private members
   var ctx = this;
@@ -31,11 +33,18 @@ window.$dash = (function() {
     resizeHandler();
 
     // Add widget modal hooks
-    $('#add-widget').on('shown', loadPluginListHandler);
-    $('#add-widget .widget-list').bind('change', function() {
-      $('#add-widget .btn-primary').removeClass('disabled');
-    });
+    $('#add-widget').on('shown', loadWidgetListHandler);
+    $('#add-widget .widget-list').bind('change', changeWidgetListHandler);
     $('#add-widget .btn-primary').click(addWidgetHandler);
+
+    $('#add-widget').on('click', '#select-data-source', showDataSourcesHandler);
+
+    // Add data source modal hooks
+    $('#choose-datasource').on('shown', loadDataSourceListHandler);
+    $('#choose-datasource .datasource-list').bind('change', function() {
+      $('#choose-datasource .btn-primary').removeClass('disabled');
+    });
+    $('#choose-datasource .btn-primary').click(addDataSourceHandler);
 
     $('.dashboard').on('click', '.widget-settings-btn', settingsClickHandler);
     $('.dashboard').on('click', '.edit-overlay .close', function() { $(this).parent().hide(); });
@@ -88,6 +97,9 @@ window.$dash = (function() {
   };
 
   this.registerPlugin = function registerPlugin(name, pluginObj) {
+    if (!ctx.loadedPlugins[name])
+      return showError(new Error('Attempted to register unknown plugin ' + name));
+
     // Give the plugin EventEmitter capabilities
     EventEmitter.inherit(pluginObj);
 
@@ -109,9 +121,9 @@ window.$dash = (function() {
     async.each(plugin.assets,
       function(asset, done) {
         if (asset.match(/\.css$/))
-          ctx.loadCSS('/plugins/' + plugin.name + '/' + asset, done);
+          ctx.loadCSS('/widgets/' + plugin.name + '/' + asset, done);
         else if (asset.match(/\.js/))
-          ctx.loadJS('/plugins/' + plugin.name + '/' + asset, done);
+          ctx.loadJS('/widgets/' + plugin.name + '/' + asset, done);
         else
           done('Unrecognized asset ' + asset + ' in plugin ' + plugin);
       },
@@ -178,7 +190,7 @@ window.$dash = (function() {
 
   this.showError = function showError(err) {
     console.error(err.stack || err);
-    alert(err.error || err.message);
+    alert(err.error || err.message || err);
   };
 
   function getBestLayout(cols, dashboard) {
@@ -218,6 +230,7 @@ window.$dash = (function() {
     var cols = options.cols || 1;
     var type = options.type;
     var title = options.title || options.type;
+    var config = options.config || {};
     var instance = options.instance;
 
     console.log('Adding ' + type + ' widget ' + widgetID + ' (x=' + x +
@@ -244,8 +257,25 @@ window.$dash = (function() {
     ctx.dashboard.loaded.widgets[widgetID] = {
       type: type,
       el: ctx.grid.add_widget(html, cols, rows, x, y),
-      instance: instance
+      instance: instance,
+      config: config
     };
+  }
+
+  function renderWidgetConfig(config) {
+    var html = '';
+
+    for (var i = 0; i < config.length; i++) {
+      var entry = config[i];
+
+      switch (entry.type) {
+        case 'datasource':
+          html += '<label>Data Source:</label> <span id="selected-data-source"></span> <a href="#select-data-source" id="select-data-source" class="btn">Select Data Source</a>';
+          break;
+      }
+    }
+
+    $('#widget-config').html(html);
   }
 
   function createUUID() {
@@ -254,27 +284,65 @@ window.$dash = (function() {
     });
   }
 
-  function loadPluginListHandler() {
+  function getWidgetConfig() {
+    //$('#add-widget .widget-list')
+    return null;
+  }
+
+  function loadWidgetListHandler() {
     var $list = $('#add-widget .widget-list');
 
-    ctx.availablePlugins = {};
+    ctx.availableWidgets = {};
     $list.empty();
     $('#add-widget .btn-primary').addClass('disabled');
 
-    console.log('Loading plugin list');
-    ctx.apiGET('/api/plugins', function(err, data) {
+    console.log('Loading widget list');
+    ctx.apiGET('/api/widgets', function(err, data) {
       if (err) return showError(err);
 
-      console.log('Loaded list of ' + data.plugins.length + ' plugins');
+      console.log('Loaded list of ' + data.plugins.length + ' widgets');
 
       for (var i = 0; i < data.plugins.length; i++) {
         var plugin = data.plugins[i];
-        ctx.availablePlugins[plugin.name] = plugin;
-        $list.append('<option value="' + plugin.name + '">' + plugin.name + '</option>');
+        ctx.availableWidgets[plugin.name] = plugin;
+        $list.append('<option value="' + plugin.name + '">' + plugin.display_name + '</option>');
       }
 
-      $('#add-widget .btn-primary').removeClass('disabled');
+      changeWidgetListHandler();
     });
+  }
+
+  function loadDataSourceListHandler() {
+    var $list = $('#choose-datasource .datasource-list');
+
+    // FIXME: Implement this method
+
+    // FIXME: Finish data source selection
+
+    // FIXME: Instantiate all "datasource" objects in addWidgetHandler()
+
+    // TODO: Finish renderWidgetConfig()
+
+    // TODO:  Validate all form entries (need a "required" JSON attribute?) and
+    //        only unlock "add/choose" buttons when form is valid. Use a lib for this?
+  }
+
+  function changeWidgetListHandler() {
+    var name = $('#add-widget .widget-list').val();
+    if (!name)
+      return;
+
+    var widget = ctx.availableWidgets[name];
+    if (!widget)
+      return showError('Unknown widget ' + name);
+
+    renderWidgetConfig(widget.config);
+
+    $('#add-widget .btn-primary').removeClass('disabled');
+  }
+
+  function showDataSourcesHandler() {
+    $('#choose-datasource').modal('show');
   }
 
   function pluginLoadedHandler(name, pluginObj) {
@@ -284,7 +352,7 @@ window.$dash = (function() {
         continue;
 
       console.log('Creating instance of ' + name + ' - ' + widgetID);
-      widget.instance = new pluginObj(widget.el.find('.widget-content'));
+      widget.instance = new pluginObj(widget.el.find('.widget-content'), widget.config);
     }
   }
 
@@ -338,16 +406,22 @@ window.$dash = (function() {
     e.preventDefault();
     var $btn = $(this);
 
+    if (!ctx.dashboard)
+      return showError('No dashboard loaded');
+
     var name = $('#add-widget .widget-list').val();
     if (!name)
       return;
 
-    if (!ctx.dashboard)
-      return showError('No dashboard loaded');
+    var config = getWidgetConfig();
+    if (!config)
+      return showError('Invalid widget config');
 
-    var plugin = ctx.availablePlugins[name];
+    var title = $('#add-widget .widget-title').val() || name;
+
+    var plugin = ctx.availableWidgets[name];
     if (!plugin)
-      return showError('Unknown plugin ' + name);
+      return showError('Unknown widget ' + name);
 
     $btn.button('loading');
     ctx.loadPlugin(plugin, function(err) {
@@ -355,7 +429,7 @@ window.$dash = (function() {
       $('#add-widget').modal('hide');
       if (err) return ctx.showError(err);
 
-      addWidget({ type: name });
+      addWidget({ type: name, config: config });
 
       // Check if the plugin JS is already loaded
       var loadedPlugin = ctx.loadedPlugins[name];
@@ -364,6 +438,24 @@ window.$dash = (function() {
         pluginLoadedHandler(name, loadedPlugin.obj);
       }
     });
+  }
+
+  function addDataSourceHandler(e) {
+    e.preventDefault();
+
+    if (!ctx.activeDataSourceHookup)
+      return showError('Unsure what to do with the current data source');
+
+    // Convert the data source config form to a JS object
+    var config = getDashboardConfig();
+    if (!config)
+      return showError('Invalid dashboard config');
+
+    // Serialize the config info and hand it back to the select widget form
+    ctx.activeDataSourceHookup.val(JSON.stringify(config));
+    ctx.activeDataSourceHookup = null;
+
+    $('#choose-datasource').modal('hide');
   }
 
   function settingsClickHandler(e) {

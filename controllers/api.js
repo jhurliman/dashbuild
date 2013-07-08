@@ -2,11 +2,13 @@ var async = require('async');
 var fs = require('fs');
 var path = require('path');
 
-var PLUGIN_PATH = path.resolve(__dirname + '/../plugins');
+var WIDGETS_PATH = path.resolve(__dirname, '..', 'plugins', 'widgets');
+var DATASOURCES_PATH = path.resolve(__dirname, '..', 'plugins', 'datasources');
 
 module.exports = function(app) {
   app.get('/api/dashboards/:id', dashboard);
-  app.get('/api/plugins', plugins);
+  app.get('/api/widgets', widgets);
+  app.get('/api/datasources', dataSources);
 };
 
 function dashboard(req, res, next) {
@@ -30,26 +32,34 @@ function dashboard(req, res, next) {
   });
 }
 
-function plugins(req, res, next) {
+function widgets(req, res, next) {
   res.type('json');
 
-  findPlugins(function(err, plugins) {
+  findPlugins(WIDGETS_PATH, function(err, plugins) {
     if (err) return next(err);
-
     res.json({ plugins: plugins });
   });
 }
 
-function findPlugins(callback) {
+function dataSources(req, res, next) {
+  res.type('json');
+
+  findPlugins(DATASOURCES_PATH, function(err, plugins) {
+    if (err) return next(err);
+    res.json({ plugins: plugins });
+  });
+}
+
+function findPlugins(basePath, callback) {
   var plugins = [];
 
   // List all of the files/folders in the plugins/ dir
-  fs.readdir(PLUGIN_PATH, function(err, pluginDirs) {
+  fs.readdir(basePath, function(err, pluginDirs) {
     if (err) return callback(err, null);
 
     async.each(pluginDirs,
       function(dir, done) {
-        checkPlugin(path.join(PLUGIN_PATH, dir), function(err, plugin) {
+        checkPlugin(path.join(basePath, dir), function(err, plugin) {
           if (err) return done(err);
 
           if (plugin)
@@ -100,7 +110,12 @@ function checkPlugin(dirName, callback) {
         findAssets(path.join(dirName, 'public'), function(err, assetList) {
           if (err) return callback(err, null);
 
-          callback(null, { name: manifest.name, assets: assetList });
+          callback(null, {
+            name: manifest.name,
+            display_name: manifest.display_name,
+            assets: assetList,
+            config: manifest.config
+          });
         });
       });
     });

@@ -78,11 +78,40 @@
         <h3>Add a Widget</h3>
       </div>
       <div class="modal-body">
-        <select class="widget-list"></select>
+        <div class="row-fluid">
+          <div class="span6">
+            <select class="widget-list"></select>
+          </div>
+          <div id="widget-config" class="span6"></div>
+        </div>
       </div>
       <div class="modal-footer">
         <a href="#" class="btn" data-dismiss="modal">Cancel</a>
         <a href="#" class="btn btn-primary disabled" data-loading-text="Adding..." autocomplete="off">Add Widget</a>
+      </div>
+    </div>
+
+    <div id="choose-datasource" class="modal hide fade">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3>Select a Data Source</h3>
+      </div>
+      <div class="modal-body">
+        <form>
+          <fieldset>
+            <label>Data Source</label>
+            <select class="datasource-list"></select>
+            <!--<label>Account</label>
+            <select class="account-list"></select>
+            <span class="help-inline">
+              <button class="add-account" type="submit" class="btn">Add Account</button>
+            </span>-->
+          </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+        <a href="#" class="btn btn-primary disabled" data-loading-text="Adding..." autocomplete="off">Use Data Source</a>
       </div>
     </div>
 

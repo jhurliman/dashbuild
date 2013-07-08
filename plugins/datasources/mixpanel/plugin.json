@@ -1,0 +1,7 @@
+{
+  "name": "mixpanel",
+  "type": "datasource",
+  "display_name": "Mixpanel",
+  "provides": [ "number", "ratio", "timeseries" ],
+  "version": "0.0.1"
+}
