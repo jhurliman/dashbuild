@@ -1,10 +1,14 @@
 var domain = require('domain');
+var express = require('express');
 
 exports.catchRequestErrors = catchRequestErrors;
 exports.handle404 = handle404;
 exports.handle500 = handle500;
+exports.requestLogger = requestLogger;
+exports.requestErrorLogger = requestErrorLogger;
 exports.shortDate = shortDate;
 exports.pad2 = pad2;
+exports.noOp = noOp;
 
 /**
  * Create a domain for each HTTP request to gracefully handle errors.
@@ -33,6 +37,57 @@ function handle500(err, req, res, next) {
 }
 
 /**
+ * Log HTTP requests in common log format
+ * (see http://httpd.apache.org/docs/1.3/logs.html#common).
+ */
+function requestLogger(options) {
+  var STATUS_RE = /HTTP\/[\d\.]+" (\d+) /;
+
+  return express.logger({ stream: {
+    write: function(str) {
+      // Remove any trailing newline in the log message
+      if (str[str.length - 1] === '\n')
+        str = str.substr(0, str.length - 1);
+
+      // Parse the status code out of the message to determine an appropriate
+      // log level
+      var match = str.match(STATUS_RE);
+      var level = (match && parseInt(match[1], 10) >= 400) ? 'warn' : 'info';
+
+      for (var i = 0; i < options.transports.length; i++)
+        options.transports[i].log(level, str, null, noOp);
+    }
+  } });
+}
+
+/**
+ * Log detailed information about request errors.
+ */
+function requestErrorLogger(options) {
+  var REQ_WHITELIST = ['url', 'headers', 'method', 'httpVersion', 'originalUrl', 'query'];
+
+  return function(err, req, res, next) {
+    var exMeta = {};
+    if (err.stack)
+      exMeta.stack = err.stack;
+    else
+      exMeta.error = '"' + err.toString() + '"';
+
+    exMeta.req = {};
+    REQ_WHITELIST.forEach(function(propName) {
+      var value = req[propName];
+      if (typeof (value) !== 'undefined')
+        exMeta.req[propName] = value;
+    });
+
+    for (var i = 0; i < options.transports.length; i++)
+      options.transports[i].logException('middlewareError', exMeta, noOp);
+
+    next(err);
+  };
+}
+
+/**
  * Returns a date string with the format "26 Feb 16:19:34".
  */
 function shortDate(date) {
@@ -50,3 +105,5 @@ function shortDate(date) {
 function pad2(n) {
   return n < 10 && n >= 0 ? '0' + n.toString(10) : n.toString(10);
 }
+
+function noOp() { }

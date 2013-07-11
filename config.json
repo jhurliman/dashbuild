@@ -3,7 +3,16 @@
   "web_port": 4334,
   "run_as_user": "",
   "log_path": "dashbuild.log",
-  "log_level": "info",
+  "log_level": "debug",
   "using_proxy": false,
-  "signing_secret": "lCUnQAQh6kXmMNWCMbLWxt3GtXuMkEfW"
+
+  "sources": {
+    "rng-1": { "source": "random", "config": {} },
+    "rng-2": { "source": "random", "config": {} }
+  },
+
+  "widgets": [
+    { "widget": "number", "title": "Valuation", "source": "rng-1", "row": 1, "col": 1, "sizex": 1, "sizey": 1 },
+    { "widget": "number", "title": "Employees", "source": "rng-2", "row": 1, "col": 2, "sizex": 2, "sizey": 1 }
+  ]
 }

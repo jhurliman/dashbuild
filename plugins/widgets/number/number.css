@@ -1,5 +1,5 @@
 
-.mixpanelevents {
+.widget.number {
   font-family: 'Helvetica neue', Helvetica, Arial, sans-serif;
 
   -moz-border-radius: 5px;
@@ -10,11 +10,11 @@
   background-color: #f1f1f1;
 }
 
-.mixpanelevents .widget-content {
+.widget.number .widget-content {
   padding: 0 10px 0 10px;
 }
 
-.mixpanelevents .big-label {
+.widget.number .big-label {
   position: relative;
   color: #333;
   line-height: 100%;

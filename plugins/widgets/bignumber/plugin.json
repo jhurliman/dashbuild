@@ -1,9 +1,0 @@
-{
-  "name": "bignumber",
-  "type": "widget",
-  "display_name": "Number",
-  "version": "0.0.1",
-  "config": [
-    { "name": "source", "display_name": "Data Source", "type": "datasource", "data_type": "number" }
-  ]
-}

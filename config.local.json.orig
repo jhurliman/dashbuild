@@ -1,4 +1,4 @@
 {
-  "debug": true,
-  "signing_secret": "lCUnQAQh6kXmMNWCMbLWxt3GtXuMkEfW"
+  "debug": false,
+  "log_level": "info"
 }
