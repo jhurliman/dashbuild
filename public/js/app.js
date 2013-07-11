@@ -1,4 +1,13 @@
 
+// FIXME: Finish data source selection
+
+// FIXME: Instantiate all "datasource" objects in addWidgetHandler()
+
+// TODO: Finish renderWidgetConfig()
+
+// TODO:  Validate all form entries (need a "required" JSON attribute?) and
+//        only unlock "add/choose" buttons when form is valid. Use a lib for this?
+
 window.$dash = (function() {
   // Constants
   this.MAX_COLS = 5;
@@ -41,9 +50,7 @@ window.$dash = (function() {
 
     // Add data source modal hooks
     $('#choose-datasource').on('shown', loadDataSourceListHandler);
-    $('#choose-datasource .datasource-list').bind('change', function() {
-      $('#choose-datasource .btn-primary').removeClass('disabled');
-    });
+    $('#choose-datasource .datasource-list').bind('change', changeDataSourceListHandler);
     $('#choose-datasource .btn-primary').click(addDataSourceHandler);
 
     $('.dashboard').on('click', '.widget-settings-btn', settingsClickHandler);
@@ -128,10 +135,7 @@ window.$dash = (function() {
           done('Unrecognized asset ' + asset + ' in plugin ' + plugin);
       },
       function(err) {
-        if (err) {
-          //delete ctx.loadedPlugins[plugin.name];
-          return callback(err, null);
-        }
+        if (err) return callback(err);
 
         console.log('Loaded assets for plugin ' + plugin.name);
         callback(null);
@@ -270,7 +274,10 @@ window.$dash = (function() {
 
       switch (entry.type) {
         case 'datasource':
-          html += '<label>Data Source:</label> <span id="selected-data-source"></span> <a href="#select-data-source" id="select-data-source" class="btn">Select Data Source</a>';
+          html += '<label>Data Source:</label> ' +
+            '<span id="selected-data-source"></span> ' +
+            '<a href="#select-data-source" id="select-data-source" class="btn" data-type="' +
+              entry.data_type + '">Select Data Source</a>';
           break;
       }
     }
@@ -315,16 +322,30 @@ window.$dash = (function() {
   function loadDataSourceListHandler() {
     var $list = $('#choose-datasource .datasource-list');
 
-    // FIXME: Implement this method
+    ctx.availableSources = {};
+    $list.empty();
+    $('#choose-datasource .btn-primary').addClass('disabled');
 
-    // FIXME: Finish data source selection
+    console.log('Loading data source list');
+    ctx.apiGET('/api/datasources', function(err, data) {
+      if (err) return showError(err);
 
-    // FIXME: Instantiate all "datasource" objects in addWidgetHandler()
+      console.log('Loaded list of ' + data.plugins.length + ' data sources');
 
-    // TODO: Finish renderWidgetConfig()
+      if (activeDataSourceHookup) {
+        for (var i = 0; i < data.plugins.length; i++) {
+          var plugin = data.plugins[i];
 
-    // TODO:  Validate all form entries (need a "required" JSON attribute?) and
-    //        only unlock "add/choose" buttons when form is valid. Use a lib for this?
+          // Check if this data source provides the data type we're looking for
+          if (plugin.provides.indexOf(activeDataSourceHookup.needs) !== -1) {
+            ctx.availableSources[plugin.name] = plugin;
+            $list.append('<option value="' + plugin.name + '">' + plugin.display_name + '</option>');
+          }
+        }
+      }
+
+      changeDataSourceListHandler();
+    });
   }
 
   function changeWidgetListHandler() {
@@ -341,7 +362,30 @@ window.$dash = (function() {
     $('#add-widget .btn-primary').removeClass('disabled');
   }
 
+  function changeDataSourceListHandler() {
+    // TODO: 
+
+    var name = $('#choose-datasource .datasource-list').val();
+    if (!name)
+      return;
+
+    var plugin = ctx.availableSources[name];
+    if (!plugin)
+      return showError('Unknown data source ' + name);
+
+    ctx.loadPlugin(plugin, function(err) {
+      if (err) return showError(err);
+    });
+
+    //$('#choose-datasource .btn-primary').removeClass('disabled');
+  }
+
   function showDataSourcesHandler() {
+    ctx.activeDataSourceHookup = {
+      needs: $(this).attr('data-type'),
+      element: $(this)
+    };
+
     $('#choose-datasource').modal('show');
   }
 
@@ -525,50 +569,6 @@ window.$dash = (function() {
   return this;
 })();
 
-window.EventEmitter = function() {};
-EventEmitter.prototype.on = function(event, func) {
-  this._events = this._events || {};
-  this._events[event] = this._events[event] || [];
-  this._events[event].push(func);
-};
-EventEmitter.prototype.off = function(event, func) {
-  if (!this._events) return;
-  if (!(event in this._events)) return;
-  this._events[event].splice(this._events[event].indexOf(func), 1);
-};
-EventEmitter.prototype.trigger = function(event /*, args... */) {
-  if (!this._events) return;
-  if (!(event in this._events)) return;
-  for(var i = 0; i < this._events[event].length; i++)
-    this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
-};
-EventEmitter.inherit = function(destObject) {
-  var props = [ 'on', 'off', 'trigger' ];
-  for (var i = 0; i < props.length; i++)
-    destObject.prototype[props[i]]  = EventEmitter.prototype[props[i]];
-};
-
-window.$dashutils = (function() {
-  this.formatNumber = function(num, decimalPlaces) {
-    var str = num.toFixed(decimalPlaces || 0);
-    var parts = str.split('.');
-    parts[0] = commaSeparateNumber(parts[0]);
-
-    return parts.join('.');
-  };
-
-  function commaSeparateNumber(num) {
-    var RE = /(\d+)(\d{3})/;
-    num = num.toString();
-
-    while (RE.test(num))
-      num = num.replace(RE, '$1' + ',' + '$2');
-
-    return num;
-  }
-
-  return this;
-})();
 
 // Start the app
 $(function() { $dash.init(); });

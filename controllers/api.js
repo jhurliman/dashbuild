@@ -114,6 +114,7 @@ function checkPlugin(dirName, callback) {
             name: manifest.name,
             display_name: manifest.display_name,
             assets: assetList,
+            provides: manifest.provides,
             config: manifest.config
           });
         });
