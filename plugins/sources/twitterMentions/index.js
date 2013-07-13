@@ -1,11 +1,11 @@
 var log = require('winston');
 var qs = require('querystring');
 var zlib = require('zlib');
-var timeplan = require('timeplan');
 var OAuth = require('oauth').OAuth;
 
 module.exports = TwitterMentions;
 
+var DEFAULT_REFRESH_MIN = 10;
 var REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token';
 var ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token';
 var SEARCH_URL = 'https://api.twitter.com/1.1/search/tweets.json';
@@ -19,6 +19,8 @@ var HEADERS = {
 
 
 function TwitterMentions(config) {
+  this.data = null;
+  this.lastUpdated = null;
   var oauth;
   var self = this;
 
@@ -34,7 +36,9 @@ function TwitterMentions(config) {
       throw new Error('Invalid Twitter config ' + JSON.stringify(config));
     }
 
-    timeplan.repeat({ period: '10m', task: updateTweets });
+    var refreshMS = (config.refresh_min || DEFAULT_REFRESH_MIN) * 60 * 1000;
+    setInterval(updateTweets, refreshMS);
+    updateTweets();
   }
 
   function updateTweets() {
@@ -52,7 +56,10 @@ function TwitterMentions(config) {
           avatar: tweet.user.profile_image_url_https };
       });
 
-      self.emit('data', tweets);
+      self.data = tweets;
+      self.lastUpdated = new Date();
+
+      self.emit('data', self.data);
     });
   }
 

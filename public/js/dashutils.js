@@ -8,6 +8,16 @@ window.$dashutils = (function() {
     return parts.join('.');
   };
 
+  this.formatAMPM = function(date) {
+    date = date || new Date();
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    //var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = (hours % 12) || 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    return hours + ':' + minutes;
+  };
+
   function commaSeparateNumber(num) {
     var RE = /(\d+)(\d{3})/;
     num = num.toString();

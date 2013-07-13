@@ -7,6 +7,7 @@ var REFRESH_MS = 1000 * 2;
 
 function RandomNumbers(config) {
   this.data = [];
+  this.lastUpdated = null;
   var lastX = 0;
   var self = this;
 
@@ -27,6 +28,7 @@ function RandomNumbers(config) {
     if (self.data.length >= MAX_POINTS)
       self.data.shift();
     self.data.push({ x: ++lastX, y: Math.round(Math.random() * 50) });
+    self.lastUpdated = new Date();
 
     self.emit('data', self.data);
   }

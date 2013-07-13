@@ -10,6 +10,7 @@ var REFRESH_MS = 1000 * 60 * 5;
 
 function Mixpanel(config) {
   this.data = null;
+  this.lastUpdated = null;
   var self = this;
 
   require('events').EventEmitter.call(this);
@@ -36,6 +37,7 @@ function Mixpanel(config) {
 
       var cur = Object.keys(body.data.values[config.event])[0];
       self.data = body.data.values[config.event][cur];
+      self.lastUpdated = new Date();
 
       self.emit('data', self.data);
     });

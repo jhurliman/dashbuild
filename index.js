@@ -25,8 +25,8 @@ function main() {
   nconf
     .argv()
     .env()
-    .file({ file: __dirname + '/config.local.json' })
-    .file({ file: __dirname + '/config.json' });
+    .file('user', path.join(__dirname, 'config.local.json'))
+    .file('base', path.join(__dirname, 'config.json'));
 
   // Setup console logging
   log.loggers.options.transports = [];
@@ -92,8 +92,8 @@ function setupSocketIO(server) {
     // Send updates for all data sources that have data
     for (var id in gDataSources) {
       var source = gDataSources[id];
-      if (source.data)
-        socket.emit('data', { id: id, data: source.data });
+      if (source.data !== null)
+        socket.emit('data', { id: id, data: source.data, lastUpdated: source.lastUpdated });
     }
   });
 }
@@ -135,11 +135,13 @@ function addDataSource(id, entry) {
   var plugin = require(path.join(__dirname, 'plugins', 'sources', entry.source, 'index'));
 
   var instance = new plugin(entry.config);
-  instance.on('data', function(data) { sourceDataHandler(id, data); });
+  instance.on('data', function(data) {
+    sourceDataHandler(id, data, instance.lastUpdated || new Date());
+  });
 
   gDataSources[id] = instance;
 }
 
-function sourceDataHandler(id, data) {
-  gIO.sockets.emit('data', { id: id, data: data });
+function sourceDataHandler(id, data, lastUpdated) {
+  gIO.sockets.emit('data', { id: id, data: data, lastUpdated: lastUpdated });
 }

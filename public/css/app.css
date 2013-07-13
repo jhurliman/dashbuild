@@ -6,13 +6,20 @@
 }
 
 body {
-  padding-top: 60px;
-  background-color: #f1f1f1;
+  padding-top: 10px;
+  background-color: #222;
+  font-size: 20px;
+  color: white;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 body > .container {
   overflow: hidden;
-  border: 1px dotted red;
+}
+
+h1, h2, h3, h4, h5, p {
+  padding: 0;
+  margin: 0;
 }
 
 .widget {
@@ -20,102 +27,17 @@ body > .container {
   overflow: hidden;
 }
 
-.widget-header {
-  position: relative;
-  width: 100%;
-  height: 20px;
-  z-index: 1;
-}
-
-.widget-title {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 0 20px 0 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.widget-settings-btn {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 14px;
-  height: 14px;
-}
-
-.widget-content {
-  position: absolute;
-  top: 20px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-
-.edit-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #fff;
-  background-color: rgba(255,255,255,0.85);
-  z-index: 1000;
-
-  display: none;
-}
-
-.edit-overlay .close {
-  margin-right: 5px;
-}
-
-.edit-overlay .delete {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 70px;
-  height: 30px;
-  margin-top: -15px;
-  margin-left: -35px;
-}
-
-.edit-overlay .arrow {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-}
-
-.edit-overlay .up {
-  top: 0;
-  left: 50%;
-  margin-left: -22px;
-}
-
-.edit-overlay .left {
-  top: 50%;
-  left: 0;
-  margin-top: -22px;
-}
-
-.edit-overlay .right {
-  top: 50%;
-  right: 0;
-  margin-top: -22px;
-}
-
-.edit-overlay .down {
-  bottom: 0;
-  left: 50%;
-  margin-left: -22px;
+.widget .title {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 400;
 }
 
 .gridster {
   width: 100%;
   margin: 0 auto;
-
-  opacity: .8;
 
   -webkit-transition: opacity .6s;
   -moz-transition: opacity .6s;
@@ -139,19 +61,12 @@ body > .container {
   box-shadow: 3px 3px 5px rgba(0,0,0,0.3);
 }
 
-
-.gridster .gs_w.try {
-  background-image: url(../img/sprite.png);
-  background-repeat: no-repeat;
-  background-position: 37px -169px;
-
-}
-
 .gridster .preview-holder {
   border: none;
   border-radius: 0;
-  background: #111;
-  background: rgba(0,0,0,.2);
+  background-color: #fff;
+  border-color: #fff;
+  opacity: 0.3;
 }
 
 .front-no-js-warn {

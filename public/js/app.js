@@ -37,13 +37,14 @@ window.$dash = (function() {
     socket.on('data', function(obj) {
       var id = obj.id;
       var data = obj.data;
+      var lastUpdated = obj.lastUpdated ? new Date(obj.lastUpdated) : new Date();
 
       if (ctx.dashboard) {
-        var widgets = ctx.dashboard.sourcesToWidgets[obj.id];
+        var widgets = ctx.dashboard.sourcesToWidgets[id];
         if (widgets) {
           for (var i = 0; i < widgets.length; i++) {
             if (widgets[i].instance)
-              widgets[i].instance.trigger('data', obj.data);
+              widgets[i].instance.trigger('data', data, lastUpdated);
           }
         }
       }
@@ -198,10 +199,12 @@ window.$dash = (function() {
     var rows = options.sizey || 1;
     var cols = options.sizex || 1;
     var type = options.widget;
-    var title = options.title || options.widget;
     var source = options.source;
     var config = options.config || {};
     var instance = options.instance;
+
+    config.title = options.title || options.widget;
+    config.moreinfo = options.moreinfo || '';
 
     console.log('Adding "' + type + '" widget ' + widgetID + ' (x=' + x +
       ', y=' + y + ', w=' + cols + ', h=' + rows + ')');
@@ -209,10 +212,6 @@ window.$dash = (function() {
     var html = '<li class="widget ' + type + '" data-col="' + x +
       '" data-row="' + y + '" data-sizex="' + cols + '" data-sizey="' +
       rows + '" data-widgetid="' + widgetID + '">' +
-        '<div class="widget-header">' +
-          '<div class="widget-title">' + title + '</div>' +
-        '</div>' +
-        '<div class="widget-content"></div>' +
       '</li>';
 
     ctx.dashboard.loaded.widgets[widgetID] = {
@@ -240,7 +239,7 @@ window.$dash = (function() {
         continue;
 
       console.log('Creating instance of ' + name + ' - ' + widgetID);
-      widget.instance = new pluginObj(widget.el.find('.widget-content'), widget.config);
+      widget.instance = new pluginObj(widget.el, widget.config);
     }
   }
 

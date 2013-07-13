@@ -12,7 +12,7 @@
   },
 
   "widgets": [
-    { "widget": "number", "title": "Valuation", "source": "rng-1", "row": 1, "col": 1, "sizex": 1, "sizey": 1 },
+    { "widget": "number", "title": "Valuation", "source": "rng-1", "row": 1, "col": 1, "sizex": 1, "sizey": 1, "moreinfo": "In billions", "config": { "prefix": "$" } },
     { "widget": "number", "title": "Employees", "source": "rng-2", "row": 1, "col": 2, "sizex": 2, "sizey": 1 }
   ]
 }

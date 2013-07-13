@@ -1,13 +1,7 @@
 
 .widget.number {
-  font-family: 'Helvetica neue', Helvetica, Arial, sans-serif;
-
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  border: 1px solid #aaa;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15), inset 0 1px 0 #ffffff;
-  background-color: #f1f1f1;
+  background-color: #47bbb3;
+  color: #fff;
 }
 
 .widget.number .widget-content {
@@ -15,8 +9,28 @@
 }
 
 .widget.number .big-label {
-  position: relative;
-  color: #333;
-  line-height: 100%;
   text-align: center;
+  font-size: 76px;
+  font-weight: 700;
+  line-height: 105px;
+}
+
+.widget.number .more-info {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  font-size: 15px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.widget.number .last-updated {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  right: 0;
+  font-size: 15px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.3);
 }
