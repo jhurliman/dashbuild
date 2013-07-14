@@ -1,0 +1,25 @@
+
+.widget.timeseries {
+  background-color: #ff9618;
+}
+
+.widget.timeseries h1, .widget.timeseries h2 {
+  position: relative;
+  top: 20%;
+}
+
+.widget.timeseries svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.4;
+  fill-opacity: 0.4;
+}
+
+.widget.timeseries .x_tick {
+  border-left: none;
+}
+
+.widget.timeseries .y_grid .tick {
+  stroke-width: 0;
+}

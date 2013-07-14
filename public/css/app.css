@@ -25,6 +25,7 @@ h1, h2, h3, h4, h5, p {
 .widget {
   border: 1px solid black;
   overflow: hidden;
+  text-align: center;
 }
 
 .widget .title {

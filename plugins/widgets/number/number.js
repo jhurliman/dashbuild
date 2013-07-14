@@ -24,13 +24,6 @@ function NumberWidget(el, config) {
       childSelector: '.big-label',
       resize: false
     });
-
-    // HACK: Manual vertical centering
-    /*var $label = $widget.find('.big-label');
-    var height = $label.height();
-    var containerHeight = $label.parent().innerHeight();
-    var offset = containerHeight/2 - height/2 - 10;
-    $label.css('top', offset + 'px');*/
   }
 
   function unloadHandler() {
@@ -38,13 +31,15 @@ function NumberWidget(el, config) {
 
   function dataHandler(data, lastUpdated) {
     var num;
-    if (!isNaN(parseInt(data, 10))) {
-      num = parseInt(data, 10); // Scalar value
+    if (!isNaN(parseFloat(data))) {
+      num = parseFloat(data); // Scalar value
     } else if (typeof data === 'string') {
       num = data; // Non-numeric string
-    } else if (data.length) {
+    } else if (typeof data.value === 'number') {
+      num = data.value; // Ratio (value/maxValue)
+    } else if ($.isArray(data)) {
       if (data[data.length - 1].y !== undefined)
-        num = parseInt(data[data.length - 1].y, 10); // Time-series plot
+        num = parseFloat(data[data.length - 1].y); // Time-series plot
       else
         num = data.length; // Array length
     } else {
@@ -58,12 +53,13 @@ function NumberWidget(el, config) {
   function animateNumber(start, stop, lastUpdated, durationMS) {
     var prefix = config.prefix || '';
     var suffix = config.suffix || '';
+    var digits = config.digits || 0;
     var $label = $widget.find('.big-label');
     var lastLen = $label.text().length;
 
     // Can't animate non-numeric values
     if (typeof start !== 'number' || typeof stop !== 'number') {
-      $label.text(prefix + stop + suffix);
+      $label.text(stop);
       resizeHandler();
       return;
     }
@@ -81,7 +77,7 @@ function NumberWidget(el, config) {
 
     function updateNumber($this, val) {
       var str = prefix +
-        Math.floor(val).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,') +
+        (val || 0).toFixed(digits).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,') +
         suffix;
 
       $this.text(str);
