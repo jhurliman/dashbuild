@@ -1,0 +1,10 @@
+{
+  "name": "dashbuild-angellist",
+  "version": "0.0.1",
+  "main": "angellist.js",
+  "peerDependencies": { "dashbuild": "0.x" },
+  "dependencies": {
+    "request": "2.x",
+    "winston": "0.x"
+  }
+}

@@ -40,6 +40,7 @@ window.$dash = (function() {
       var lastUpdated = obj.lastUpdated ? new Date(obj.lastUpdated) : new Date();
 
       if (ctx.dashboard) {
+        //console.log('Received data event for ' + id);
         var widgets = ctx.dashboard.sourcesToWidgets[id];
         if (widgets) {
           for (var i = 0; i < widgets.length; i++) {
@@ -47,6 +48,8 @@ window.$dash = (function() {
               widgets[i].instance.trigger('data', data, lastUpdated);
           }
         }
+      } else {
+        console.warn('Discarding data event for ' + id + ', no dashboard');
       }
     });
   };

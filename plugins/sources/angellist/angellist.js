@@ -1,4 +1,5 @@
 var request = require('request');
+var log = require('winston');
 
 module.exports = AngelList;
 

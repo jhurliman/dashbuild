@@ -1,0 +1,10 @@
+{
+  "name": "dashbuild-mixpanel",
+  "version": "0.0.1",
+  "main": "mixpanel.js",
+  "peerDependencies": { "dashbuild": "0.x" },
+  "dependencies": {
+    "request": "2.x",
+    "winston": "0.x"
+  }
+}

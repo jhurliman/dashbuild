@@ -1,0 +1,6 @@
+{
+  "name": "dashbuild-random",
+  "version": "0.0.1",
+  "main": "random.js",
+  "peerDependencies": { "dashbuild": "0.x" }
+}

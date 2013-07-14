@@ -3,7 +3,7 @@ var qs = require('querystring');
 var zlib = require('zlib');
 var OAuth = require('oauth').OAuth;
 
-module.exports = TwitterMentions;
+module.exports = Twitter;
 
 var DEFAULT_REFRESH_MIN = 10;
 var REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token';
@@ -14,11 +14,11 @@ var HEADERS = {
   'Accept': '*/*',
   'Accept-Encoding': 'gzip',
   'Connection': 'keep-alive',
-  'User-Agent': config.user_agent || 'zincexternalhit/1.0'
+  'User-Agent': 'dashbuild-twitter/' + require('./package').version
 };
 
 
-function TwitterMentions(config) {
+function Twitter(config) {
   this.data = null;
   this.lastUpdated = null;
   var oauth;
@@ -123,4 +123,4 @@ function TwitterMentions(config) {
   }
 }
 
-require('util').inherits(TwitterMentions, require('events').EventEmitter);
+require('util').inherits(Twitter, require('events').EventEmitter);

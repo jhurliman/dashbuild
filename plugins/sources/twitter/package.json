@@ -1,0 +1,11 @@
+{
+  "name": "dashbuild-twitter",
+  "version": "0.0.1",
+  "main": "twitter.js",
+  "peerDependencies": { "dashbuild": "0.x" },
+  "dependencies": {
+    "oauth": "0.9.x",
+    "request": "2.x",
+    "winston": "0.x"
+  }
+}
