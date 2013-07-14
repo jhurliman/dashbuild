@@ -20,6 +20,13 @@
   border-left: none;
 }
 
+.widget.timeseries .x_tick .title {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.4);
+  opacity: 0.5;
+  padding-bottom: 3px;
+}
+
 .widget.timeseries .y_grid .tick {
   stroke-width: 0;
 }
