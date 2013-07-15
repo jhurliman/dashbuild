@@ -45,8 +45,10 @@ function TimeSeries(el, config) {
       graph.series[0].data.push({ x: new Date(lastUpdated), y: data });
     } else if ($.isArray(data)) {
       $widget.find('.value').text(data[data.length - 1].y);
-      graph.series[0].data = data;
-      // FIXME: Fix x axis dates?
+      // Adjust timestamps to the local timezone
+      graph.series[0].data = data.map(function(p) {
+        return { x: p.x - (new Date()).getTimezoneOffset() * 60, y: p.y };
+      });
     } else {
       console.warn('TimeSeries got unrecognized data: ' + JSON.stringify(data));
       return;

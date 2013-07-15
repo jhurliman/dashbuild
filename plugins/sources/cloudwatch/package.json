@@ -1,0 +1,10 @@
+{
+  "name": "dashbuild-cloudwatch",
+  "version": "0.0.1",
+  "main": "cloudwatch.js",
+  "peerDependencies": { "dashbuild": "0.x" },
+  "dependencies": {
+    "aws-sdk": "1.3.x",
+    "winston": "0.x"
+  }
+}
