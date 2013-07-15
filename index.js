@@ -132,8 +132,9 @@ function loadDataSources() {
 }
 
 function addDataSource(id, entry) {
-  var pkg = require(path.join(__dirname, 'plugins', 'sources', entry.source, 'package'));
-  var plugin = require(path.join(__dirname, 'plugins', 'sources', entry.source,
+  var pkg = require(path.join(__dirname, 'plugins', 'sources', entry.source_plugin,
+    'package'));
+  var plugin = require(path.join(__dirname, 'plugins', 'sources', entry.source_plugin,
     pkg.main || 'index'));
 
   var instance = new plugin(entry.config);

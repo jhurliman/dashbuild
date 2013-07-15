@@ -7,8 +7,8 @@
   "using_proxy": false,
 
   "sources": {
-    "rng-1": { "source": "random", "config": {} },
-    "rng-2": { "source": "random", "config": {} }
+    "rng-1": { "source_plugin": "random", "config": {} },
+    "rng-2": { "source_plugin": "random", "config": {} }
   },
 
   "widgets": [
