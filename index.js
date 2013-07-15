@@ -86,7 +86,8 @@ function setupSocketIO(server) {
 
   gIO.enable('browser client minification'); // send minified client
   gIO.enable('browser client etag'); // apply etag caching logic based on version number
-  gIO.enable('browser client gzip'); // gzip the file
+  if (!process.platform.watch(/^win/))
+    gIO.enable('browser client gzip'); // gzip the file
 
   gIO.sockets.on('connection', function(socket) {
     // Send updates for all data sources that have data
