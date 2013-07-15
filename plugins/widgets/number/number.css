@@ -2,6 +2,7 @@
 .widget.number {
   background-color: #47bbb3;
   color: #fff;
+  padding: 10px;
 }
 
 .widget.number .widget-content {
