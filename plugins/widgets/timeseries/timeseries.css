@@ -13,7 +13,7 @@
   top: 0;
   left: 0;
   opacity: 0.4;
-  fill-opacity: 0.4;
+  fill-opacity: 0.6;
 }
 
 .widget.timeseries .x_tick {
@@ -29,4 +29,22 @@
 
 .widget.timeseries .y_grid .tick {
   stroke-width: 0;
+}
+
+.widget.timeseries .more-info {
+  position: absolute;
+  bottom: 52px;
+  left: 0;
+  right: 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.widget.timeseries .last-updated {
+  position: absolute;
+  bottom: 32px;
+  left: 0;
+  right: 0;
+  font-size: 15px;
+  color: rgba(0, 0, 0, 0.3);
 }

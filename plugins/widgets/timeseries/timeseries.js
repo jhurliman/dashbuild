@@ -3,6 +3,8 @@ function TimeSeries(el, config) {
   var $widget = $(el);
   var pluginCtx = this;
   var graph, xAxis, yAxis;
+  var prefix = config.prefix || '';
+  var suffix = config.suffix || '';
 
   function init() {
     $widget.html(
@@ -41,10 +43,10 @@ function TimeSeries(el, config) {
       $widget.find('.value').text(data);
       return;
     } else if (typeof data === 'number') {
-      $widget.find('.value').text(data);
+      $widget.find('.value').text(prefix + data + suffix);
       graph.series[0].data.push({ x: new Date(lastUpdated), y: data });
     } else if ($.isArray(data)) {
-      $widget.find('.value').text(data[data.length - 1].y);
+      $widget.find('.value').text(prefix + data[data.length - 1].y + suffix);
       // Adjust timestamps to the local timezone
       graph.series[0].data = data.map(function(p) {
         return { x: p.x - (new Date()).getTimezoneOffset() * 60, y: p.y };
@@ -53,6 +55,9 @@ function TimeSeries(el, config) {
       console.warn('TimeSeries got unrecognized data: ' + JSON.stringify(data));
       return;
     }
+
+    $widget.find('.last-updated').text('Last updated at ' +
+      $dashutils.formatAMPM(lastUpdated));
 
     graph.render();
   }
