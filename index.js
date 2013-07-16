@@ -6,6 +6,7 @@ var express = require('express');
 var expressWinston = require('express-winston');
 var utils = require('./utils');
 
+var ONE_MONTH = 1000 * 60 * 60 * 24 * 30;
 var INDEX_PATH = path.join(__dirname, 'public', 'html', 'index.html');
 var SOCKET_IO_LOG_LEVELS = {
   error: 0,
