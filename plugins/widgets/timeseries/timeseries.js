@@ -46,7 +46,10 @@ function TimeSeries(el, config) {
       $widget.find('.value').text(prefix + data + suffix);
       graph.series[0].data.push({ x: new Date(lastUpdated), y: data });
     } else if ($.isArray(data)) {
-      $widget.find('.value').text(prefix + data[data.length - 1].y + suffix);
+      if (data.length)
+        $widget.find('.value').text(prefix + data[data.length - 1].y + suffix);
+      else
+        $widget.find('.value').text(prefix + '0' + suffix);
       // Adjust timestamps to the local timezone
       graph.series[0].data = data.map(function(p) {
         return { x: p.x - (new Date()).getTimezoneOffset() * 60, y: p.y };
