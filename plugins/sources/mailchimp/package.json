@@ -1,0 +1,10 @@
+{
+  "name": "dashbuild-mailchimp",
+  "version": "0.0.1",
+  "main": "mailchimp.js",
+  "peerDependencies": { "dashbuild": "0.x" },
+  "dependencies": {
+    "mailchimp": "1.1.0",
+    "winston": "0.x"
+  }
+}
