@@ -9,8 +9,15 @@ var REFRESH_MS = 1000 * 60 * 5;
 
 
 function Mixpanel(config) {
+  if (!config.api_key)
+    throw new Error('Missing Mixpanel api_key: ' + JSON.stringify(config));
+  if (!config.api_secret)
+    throw new Error('Missing Mixpanel api_secret: ' + JSON.stringify(config));
+
   this.data = null;
   this.lastUpdated = null;
+  this.apiKey = config.api_key;
+  this.apiSecret = config.api_secret;
   var self = this;
 
   require('events').EventEmitter.call(this);
@@ -45,7 +52,7 @@ function Mixpanel(config) {
 
   function signRequest(params) {
     // Add required parameters
-    params.api_key = API_KEY;
+    params.api_key = self.apiKey;
     params.expire = ~~(new Date() / 1000 + 3600);
 
     // Sort the query parameters by key name
@@ -58,7 +65,7 @@ function Mixpanel(config) {
       query += keys[i] + '=' + params[keys[i]];
 
     // Sign the request
-    params.sig = $.md5(query + API_SECRET);
+    params.sig = $.md5(query + self.apiSecret);
   }
 }
 
