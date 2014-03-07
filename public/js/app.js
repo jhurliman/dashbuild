@@ -205,16 +205,18 @@ window.$dash = (function() {
     var source = options.source;
     var config = options.config || {};
     var instance = options.instance;
+    var style = (options.bgcolor) ? ' style="background-color:' + options.bgcolor + '"' : '';
 
     config.title = options.title || options.widget;
     config.moreinfo = options.moreinfo || '';
+    config.bgcolor = options.bgcolor || undefined;
 
     console.log('Adding "' + type + '" widget ' + widgetID + ' (x=' + x +
       ', y=' + y + ', w=' + cols + ', h=' + rows + ')');
 
     var html = '<li class="widget ' + type + '" data-col="' + x +
       '" data-row="' + y + '" data-sizex="' + cols + '" data-sizey="' +
-      rows + '" data-widgetid="' + widgetID + '">' +
+      rows + '" data-widgetid="' + widgetID + '"' + style + '>' +
       '</li>';
 
     ctx.dashboard.loaded.widgets[widgetID] = {
