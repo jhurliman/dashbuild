@@ -1,0 +1,9 @@
+{
+  "name": "dashbuild-testflight",
+  "version": "0.0.1",
+  "main": "testflight.js",
+  "peerDependencies": { "dashbuild": "0.x" },
+  "dependencies": {
+    "phantom": "0.5.x"
+  }
+}
